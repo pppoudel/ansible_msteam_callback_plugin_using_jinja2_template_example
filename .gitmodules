@@ -1,0 +1,4 @@
+[submodule "callback_plugins"]
+	path = callback_plugins
+	url = https://github.com/pppoudel/callback_plugins.git
+	branch = main

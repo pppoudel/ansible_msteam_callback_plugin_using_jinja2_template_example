@@ -1,0 +1,59 @@
+{
+    "@type": "MessageCard",
+    "@context": "http://schema.org/extensions",
+    "themeColor": "{{ '#008000' if(v_ansible_job_status != 'failed') else '#FF0000' }}",
+    "title": "Deployment of {{v_ansible_app_file}} on {{ v_ansible_environment }} environment {{'completed successfully' if(v_ansible_job_status == 'successful') else 'failed.' }}",
+    "summary": "Ansible Job Summary",
+    "sections": [{
+        "activityTitle": "Job {{ v_ansible_job_id }} summary: ",
+        "facts": [
+        {% if v_ansible_executed_from_tower is sameas true %}
+        {
+            "name": "Playbook revision",
+            "value": "{{ v_ansible_scm_revision }}"
+        }, {
+            "name": "Job name",
+            "value": "{{ v_ansible_job_name }}"
+        },
+        {% endif %}
+        {
+            "name": "Job status",
+            "value": "{{ v_ansible_job_status }}"
+        }, {
+            "name": "Job started at",
+            "value": "{{ v_ansible_job_started }}"
+        }, {
+            "name": "Job finished at",
+            "value": "{{ v_ansible_job_finished }}"
+        }, {
+            "name": "Job elapsed time (sec)",
+            "value": "{{ v_ansible_job_elapsed_time }}"
+        }, {
+            "name": "Application (v_app_file)",
+            "value": "{{ v_ansible_app_file }}"
+        }, {
+            "name": "Action (v_deployment_action)",
+            "value": "{{ v_ansible_deployment_action }}"
+        }, {
+            "name": "Environment (v_environment)",
+            "value": "{{ v_ansible_environment }}"
+        }, {
+            "name": "Hosts",
+            "value": "{{ v_ansible_host_list | join(',') }}"
+        },{
+            "name": "Instance name(v_instance_name)",
+            "value": "{{ v_ansible_instance_name | default('na') }}"
+        }],
+        "markdown": false
+    }]
+    {% if v_ansible_executed_from_tower is sameas true %}
+    ,"potentialAction": [{
+        "@context": "http://schema.org",
+        "@type": "ViewAction",
+        "name": "View on Ansible Tower",
+        "target": [
+            "{{ v_ansible_web_url }}"
+        ]        
+    }]
+  {% endif %}
+}

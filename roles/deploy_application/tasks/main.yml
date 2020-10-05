@@ -1,0 +1,16 @@
+---
+
+- debug:
+    msg:
+      - "v_wlp_install_dir - {{ v_wlp_install_dir }}"
+      - "v_instance_config_root - {{ v_instance_config_root }}"
+      - "v_app_deploy_loc - {{v_app_deploy_loc}}"
+      
+- name: "Show deployment failure message"
+  fail:
+    msg: "Deployment of {{ v_app_file }} ended with failure"
+  when: v_failed | bool
+  
+- name: "Show deployment success message"
+  debug:
+    msg: "{{ v_app_file }} has been successfully deployed to {{ v_app_deploy_loc }}"

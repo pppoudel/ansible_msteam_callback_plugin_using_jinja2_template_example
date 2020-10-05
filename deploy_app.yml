@@ -1,0 +1,59 @@
+---
+# Command line example:
+#ansible-playbook -i inventory/default.ini deploy_app.yml -e "@example_data.json"
+
+- hosts: localhost
+  vars:
+    v_env_list: ['lab','dev','uat','prod']
+    v_deploy_action_list: ['deploy_only','deploy_and_recycle']
+
+  tasks:
+  - name: "Check mandatory parameter (v_environment)"
+    fail:
+      msg: "'v_environment' is not defined or has incorrect value. Accepted values are {{ v_env_list | join (',') }}"
+    when: v_environment is not defined or v_environment not in v_env_list
+    
+  - name: "Check mandatory parameter (v_host_name)"
+    fail:
+      msg: "'v_host_name' is not defined or has empty value."
+    when: v_host_name is not defined or v_host_name | length < 1
+    
+  - name: "Check mandatory parameter (v_instance_name)"
+    fail:
+      msg: "'v_instance_name' is not defined or has empty value."
+    when: v_instance_name is not defined or v_instance_name | length < 1
+
+  - name: "Check mandatory parameter (v_deployment_action)"
+    fail:
+      msg: "Unsupported value for 'v_deployment_action'. Supported values are '{{ v_deploy_action_list | join(',') }}'"
+    when: v_deployment_action not in v_deploy_action_list
+
+  - name: "Check mandatory parameters (v_app_file)"
+    fail:
+      msg: "'v_app_file' is not defined or has empty value"
+    when: v_app_file is not defined or v_app_file | length < 1
+
+  - debug:
+      msg:
+        - "v_environment - {{ v_environment }}"
+        - "v_host_name - {{ v_host_name }}"
+        - "v_instance_name - {{ v_instance_name }}"
+        - "v_deployment_action - {{ v_deployment_action }}"
+        - "v_app_file - {{ v_app_file }}"
+        
+  - name: "Add supplied host into inventory"
+    add_host:
+      name: "{{ v_host_name }}"
+      groups: "{{ v_environment }}"
+
+- hosts: "{{ v_environment }}"
+  serial: 1
+  max_fail_percentage: 0
+  gather_facts: no
+  tasks:
+    - setup:
+        gather_subset: 'min'
+
+    - name: "Include role deploy_app"
+      include_role:
+        name: deploy_application

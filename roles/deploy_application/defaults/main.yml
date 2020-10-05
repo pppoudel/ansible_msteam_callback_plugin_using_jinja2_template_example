@@ -1,0 +1,5 @@
+---
+v_wlp_install_dir: "/apps/waslb/{{ v_environment }}/wlp"
+v_instance_config_root: "{{ v_wlp_install_dir }}/usr/servers/{{ v_instance_name }}"
+v_app_deploy_loc: "{{ v_instance_config_root }}/dropins"
+v_failed: No

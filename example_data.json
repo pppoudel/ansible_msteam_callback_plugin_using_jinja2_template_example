@@ -1,0 +1,9 @@
+{
+    "v_app_file": "MyApp.ear",
+    "v_deployment_action": "deploy_and_recycle",
+    "v_environment": "lab",
+    "v_failed": "yes",
+    "v_host_name": "cl11292.sunlifecorp.com",
+    "v_instance_name": "WASLibSrv01",
+    "v_message_template": "templates/msteam_deploy_msg.json.j2"
+}
